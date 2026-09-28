@@ -1,0 +1,67 @@
+MIT License
+
+Copyright (c) 2026 Pixelforge Ports contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Scope of this port license
+
+This license covers this project's original Java adaptation host, launcher
+modifications, display helper, controller configuration, build and verification
+tools, tests, handwritten compile-only declarations and original documentation.
+Port maintained by Pixelforge ports (Ronax).
+
+Launcher portions adapted from BinaryCounter's Westonpack libGDX example retain
+the upstream MIT notice below. It applies to the adapted example code, not all
+components of the separately provided Westonpack runtime.
+
+Residual game code, artwork, screenshots and trademarks are not licensed by this
+MIT grant. Third-party library/runtime code retains its own terms. This license
+covers only this project's original contributions to compile-only declarations,
+not ownership of the game's underlying interfaces or implementation.
+
+Upstream launcher attribution
+
+MIT License
+
+Copyright (c) 2025 BinaryCounter
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Component: portions of the launcher adapted from the Westonpack libGDX example.
+Example: https://github.com/binarycounter/Westonpack/wiki/LibGDX-Example
+License source: https://github.com/binarycounter/Westonpack/blob/main/LICENSE
+The Residual launcher adds game-specific paths, input mapping, data verification,
+display setup and Java host arguments. The upstream notice is retained above.

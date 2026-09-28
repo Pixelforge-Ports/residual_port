@@ -1,0 +1,26 @@
+build/
+dist/
+package/residual/residual.jar
+package/residual/gamedata/Residual.jar
+package/residual/runtime/*.jar
+package/residual/saves/
+package/residual/cache/
+package/residual/resolution.txt
+package/residual/log.txt
+__pycache__/
+*.pyc
+
+# Generated public PortMaster export
+/ports/
+
+# Generated/private content
+ports/
+build/
+dist/
+package/residual/residual.jar
+package/residual/gamedata/Residual.jar
+package/residual/runtime/*-host.jar
+package/residual/saves/
+package/residual/cache/
+package/residual/log.txt
+package/residual/resolution.txt

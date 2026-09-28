@@ -1,0 +1,43 @@
+Residual - PortMaster testing
+Porter: Pixelforge ports (Ronax)
+
+Game: https://www.gog.com/en/game/residual
+Package: Residual.zip (BYO data; attach the built ZIP to this post)
+
+Install:
+Update PortMaster, put Residual.zip in its autoinstall folder and open PortMaster.
+Stay online for the Java 17 and Westonpack downloads if needed.
+Supply the supported Residual.jar from your owned Windows build (1.4.1).
+Destination: <ports directory>/residual/gamedata/Residual.jar.
+On muOS: <SD card>/ports/residual/gamedata/Residual.jar.
+Download the full Windows offline installer from your GOG library, install it
+on Windows or extract with innoextract, then copy the JAR intact as `Residual.jar`.
+See the installed residual.md for the checksum and manual installation instructions.
+
+Controller mode to test:
+- gptokeyb2 runs with `-x` and creates a virtual Xbox 360 controller; no keyboard mapping file is loaded.
+- The host enables Residual's built-in controller input, and the game runs with CRUSTY_BLOCK_INPUT=1 to avoid duplicate raw input.
+- Test menu navigation, D-pad, left and right sticks, face buttons, shoulders/triggers, and the exit shortcut. Report the detected controller layout and any missing or duplicated actions.
+- Use the game's own menus for options and save deletion; use a disposable slot for deletion testing.
+
+Testing checklist (include exact device, firmware version, graphics driver and result; mark only configurations you tested):
+[ ] muOS: RG34XX SP / other RGXX; fbdev or LibMali
+[ ] ROCKNIX: specify device and Panfrost or LibMali
+[ ] dArkOS: R36S; KMSDRM / LibMali
+[ ] Knulli: specify device; KMSDRM / LibMali
+[ ] AmberELEC: specify device; legacy LibMali
+[ ] ArkOS (optional): specify device and graphics driver
+[ ] Other compatible ARM64 firmware: specify device and graphics driver
+[ ] 640x480
+[ ] 720x480
+[ ] 720x720
+[ ] 1024x768
+[ ] 1280x720
+
+Please test startup, menus, all controls, sound/music, normal gameplay speed,
+save/reload, suspend/resume and exit. Report performance during actual gameplay.
+
+For failures attach residual/log.txt and steps to reproduce.
+Do not upload purchased game files, installers or personal information.
+
+Please also test interface zoom options and confirm they persist after restarting. Use a disposable save slot when testing deletion through the game's menus.
