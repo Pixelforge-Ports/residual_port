@@ -1,0 +1,8 @@
+[
+  {
+    "name": "libjpeg.so.8",
+    "directory": "libs.aarch64",
+    "sha256": "bd56375d246a0e3b8807c34dd4ed8f65bfbb6fea014220e62d2befa6f92fb9da",
+    "test_only": false
+  }
+]

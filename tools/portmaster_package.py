@@ -22,7 +22,10 @@ def public_files(root):
         for entry in json.loads(lock.read_text(encoding='utf-8')):
             if entry['test_only']:
                 continue
-            name = game+'/runtime/lib/'+entry['name']
+            library_dir = Path(entry.get('directory', 'runtime/lib'))
+            if library_dir.is_absolute() or '..' in library_dir.parts:
+                raise ValueError('Unsafe runtime library directory: '+str(library_dir))
+            name = (Path(game)/library_dir/entry['name']).as_posix()
             if hashlib.sha256((package/name).read_bytes()).hexdigest() != entry['sha256']:
                 raise ValueError('Runtime checksum mismatch: '+name)
             names.append(name)

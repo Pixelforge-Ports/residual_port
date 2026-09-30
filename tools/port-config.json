@@ -5,5 +5,5 @@
   "zip": "residual.zip",
   "game_file": "gamedata/Residual.jar",
   "directories": ["gamedata"],
-  "runtime_libraries": false
+  "runtime_libraries": true
 }

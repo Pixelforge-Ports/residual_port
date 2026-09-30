@@ -89,6 +89,7 @@ def verify(root):
     require('$GPTOKEYB2 java -x &' in launcher and '$GPTOKEYB2 java -c ' not in launcher, 'Launcher must use gptokeyb2 Xbox 360 mode')
     require('$GPTOKEYB ' not in launcher and 'TEXTINPUTINTERACTIVE' not in launcher, 'Legacy mapper setup')
     require('CRUSTY_BLOCK_INPUT=1' in launcher, 'Raw controller input must be blocked to avoid duplicate input')
+    require('LD_LIBRARY_PATH=$GAMEDIR/libs.${DEVICE_ARCH}:$LD_LIBRARY_PATH' in launcher, 'Weston must load port-specific architecture libraries')
     require('GAMEDATADIR="$GAMEDIR/gamedata"' in launcher and 'jar_filename="Residual.jar"' in launcher, 'Wrong game-data location or filename')
     require('"$GAMEDATADIR/$jar_filename"' in launcher and ':$GAMEDATADIR/$jar_filename' in launcher, 'Launcher must use the BYO JAR from gamedata/')
     require('fail() {' not in launcher and '|| fail "' not in launcher, 'Launcher must use inline pm_message errors')
@@ -101,9 +102,14 @@ def verify(root):
     require('input=gptokeyb2 Xbox 360' in main_source, 'Startup log must report the active controller mode')
     license_root = game+'/licenses/'
     license_files = {name[len(license_root):] for name in files if name.startswith(license_root)}
-    require(license_files == {'LICENSE-'+game+'-host.txt'}, 'Package must contain only the host license')
+    require(license_files == {'LICENSE-'+game+'-host.txt', 'LICENSE-libjpeg-turbo.txt'}, 'Package must include the host and libjpeg licenses')
     host_license = files[license_root+'LICENSE-'+game+'-host.txt']
     require(b'MIT License' in host_license and b'Component: residual-host.jar' in host_license, 'Missing host JAR MIT license')
+    jpeg_license = files[license_root+'LICENSE-libjpeg-turbo.txt']
+    require(b'Independent JPEG Group' in jpeg_license and b'NO WARRANTY' in jpeg_license, 'Missing libjpeg license terms')
+    jpeg = files[game+'/libs.aarch64/libjpeg.so.8']
+    require(jpeg[:4] == b'\x7fELF' and jpeg[4] == 2 and struct.unpack('<H', jpeg[18:20])[0] == 183, 'libjpeg must be an AArch64 ELF library')
+    require('Independent JPEG Group' in packaged_readme, 'README must acknowledge the bundled JPEG implementation')
     with zipfile.ZipFile(io.BytesIO(files[game+'/runtime/'+game+'-host.jar'])) as host:
         require(bool(host.namelist()), 'Empty host')
         require(all(n.startswith('org/portmaster/'+game+'/') and n.endswith('.class') for n in host.namelist()), 'Game or compile-only classes leaked into host')

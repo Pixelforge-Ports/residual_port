@@ -16,7 +16,7 @@ def write(path, text):
     with path.open('w', encoding='utf-8', newline='\n') as stream:
         stream.write(text)
 
-for case in ['missing-data','success','game-error','bad-data','bad-resolution','wrong-arch','mount-error','no-mount-firmware','download-error','missing-portmaster','missing-java-portmaster']:
+for case in ['missing-data','success','no-getconf','game-error','bad-data','bad-resolution','wrong-arch','mount-error','no-mount-firmware','download-error','missing-portmaster','missing-java-portmaster']:
     folder = ROOT/'build'/'launcher-tests'/case
     folder.mkdir(parents=True, exist_ok=True)
     fixtures = Path(tempfile.mkdtemp(prefix='run-', dir=folder))
@@ -25,6 +25,7 @@ for case in ['missing-data','success','game-error','bad-data','bad-resolution','
     pm = fixtures/'home/.local/share/PortMaster'
     data = fixtures/'ports'/game
     data.mkdir(parents=True,exist_ok=True)
+    write(data/'libs.aarch64/libjpeg.so.8','test library fixture')
     (pm/'libs').mkdir(parents=True,exist_ok=True)
     shutil.copyfile(ROOT/'package'/game/'display.inc',data/'display.inc')
     if case != 'missing-data': write(data/config['game_file'],'test fixture, not game data')
@@ -39,7 +40,7 @@ for case in ['missing-data','success','game-error','bad-data','bad-resolution','
 pm_message() { echo "$*"; }
 pm_finish() { echo finish >> "$TEST_ROOT/events"; }
 pm_platform_helper() { echo platform >> "$TEST_ROOT/events"; }
-getconf() { echo 64; }
+getconf() { [[ "$TEST_CASE" == no-getconf ]] && return 127; echo 64; }
 sleep() { :; }
 mount() {
   echo "mount $2" >> "$TEST_ROOT/events"
@@ -83,6 +84,8 @@ if [[ "$1" == cleanup ]]; then
 fi
 [[ "$1 $2 $3 $4" == 'headless noop kiosk crusty_glx_gl4es' ]] || exit 3
 [[ "$CRUSTY_BLOCK_INPUT" == 1 ]] || exit 8
+[[ "$LD_LIBRARY_PATH" == "$TEST_ROOT/ports/$TEST_GAME/libs.aarch64:"* ]] || exit 10
+[[ -f "$TEST_ROOT/ports/$TEST_GAME/libs.aarch64/libjpeg.so.8" ]] || exit 11
 [[ "$WESTON_HEADLESS_WIDTH" == 720 && "$WESTON_HEADLESS_HEIGHT" == 480 ]] || exit 4
 [[ "$*" == *"-D$TEST_GAME.width=720"* && "$*" == *"-D$TEST_GAME.height=480"* ]] || exit 5
 if [[ "$TEST_GAME" == gunslugs3 ]]; then [[ "$*" == *'runtime/lib/*:'* ]] || exit 6; fi
@@ -107,10 +110,10 @@ exit 0
     result=subprocess.run([bash,'-c',command],env=env,capture_output=True,text=True,timeout=20)
     write(fixtures/'test.log',result.stdout+result.stderr)
     events=(fixtures/'events').read_text(encoding='utf-8').splitlines()
-    expected=0 if case in ('success','game-error','no-mount-firmware') else 1
+    expected=0 if case in ('success','no-getconf','game-error','no-mount-firmware') else 1
     assert result.returncode==expected,(game,case,result.returncode,result.stdout,result.stderr)
-    assert events.count('finish')==int(case in ('success','game-error','no-mount-firmware')),(case,events)
-    ran=case in ('success','game-error','no-mount-firmware')
+    assert events.count('finish')==int(case in ('success','no-getconf','game-error','no-mount-firmware')),(case,events)
+    ran=case in ('success','no-getconf','game-error','no-mount-firmware')
     assert ('game' in events)==ran and events.count('cleanup')==int(ran),(case,events)
     if expected == 1:
         assert 'Residual:' in result.stdout and 'fail: command not found' not in result.stderr,(case,result.stdout,result.stderr)
@@ -131,7 +134,7 @@ exit 0
         assert not any(e.startswith('mount ') for e in events),events
     if case == 'missing-java-portmaster':
         assert sum(e.startswith('mount ') for e in events)==1 and events.count('finish')==0,(case,events)
-    if case in ('success','game-error','no-mount-firmware'):
+    if case in ('success','no-getconf','game-error','no-mount-firmware'):
         assert sum(e.startswith('mount ') for e in events)==2,events
     if case in ('bad-data','bad-resolution','mount-error'):
         assert sum(e.startswith('mount ') for e in events)==2,events
