@@ -2,8 +2,6 @@
 
 Thanks to [Orangepixel](https://orangepixel.net/) for Residual and its planet exploration and survival gameplay. PortMaster adaptation by **Pixelforge Ports (Ronax)**.
 
-The bundled `libjpeg.so.8` is based in part on the work of the Independent JPEG Group. Its license is included as `LICENSE-libjpeg-turbo.txt` in the port's licenses folder.
-
 ## Get `residual.jar`
 
 **GOG:** Download the Residual offline installer for your OS, install or extract it, then copy `residual.jar`.
