@@ -29,7 +29,13 @@ def public_files(root):
             if hashlib.sha256((package/name).read_bytes()).hexdigest() != entry['sha256']:
                 raise ValueError('Runtime checksum mismatch: '+name)
             names.append(name)
-    return {name: (package/name).read_bytes() for name in names}
+    files = {}
+    host_name = game+'/runtime/'+game+'-host.jar'
+    built_host = root/'build/portmaster-package'/host_name
+    for name in names:
+        source = built_host if name == host_name and built_host.is_file() else package/name
+        files[name] = source.read_bytes()
+    return files
 
 def public_directories(root):
     config = settings(root)

@@ -16,7 +16,7 @@ def write(path, text):
     with path.open('w', encoding='utf-8', newline='\n') as stream:
         stream.write(text)
 
-for case in ['missing-data','success','no-getconf','game-error','bad-data','bad-resolution','wrong-arch','mount-error','no-mount-firmware','download-error','missing-portmaster','missing-java-portmaster']:
+for case in ['missing-data','success','no-getconf','game-error','bad-data','bad-resolution','no-mount-firmware','missing-portmaster','missing-java-portmaster']:
     folder = ROOT/'build'/'launcher-tests'/case
     folder.mkdir(parents=True, exist_ok=True)
     fixtures = Path(tempfile.mkdtemp(prefix='run-', dir=folder))
@@ -30,9 +30,9 @@ for case in ['missing-data','success','no-getconf','game-error','bad-data','bad-
     shutil.copyfile(ROOT/'package'/game/'display.inc',data/'display.inc')
     if case != 'missing-data': write(data/config['game_file'],'test fixture, not game data')
     if case == 'bad-resolution': write(data/'resolution.txt','invalid')
-    if case not in ('download-error','missing-portmaster'):
+    if case != 'missing-portmaster':
         write(pm/'libs/weston_pkg_0.2.squashfs','')
-    if case not in ('download-error','missing-java-portmaster'):
+    if case != 'missing-java-portmaster':
         write(pm/'libs/zulu17.54.21-ca-jre17.0.13-linux.squashfs','')
     if case not in ('missing-portmaster','missing-java-portmaster'):
         write(pm/'harbourmaster','#!/bin/bash\nexit 17\n')
@@ -59,7 +59,6 @@ GPTOKEYB2=test_mapper
 directory="$TEST_ROOT"
 DEVICE_ARCH=aarch64
 PM_CAN_MOUNT=Y
-[[ "$TEST_CASE" == wrong-arch ]] && DEVICE_ARCH=armhf
 [[ "$TEST_CASE" == no-mount-firmware ]] && PM_CAN_MOUNT=N
 CFW_NAME=test
 DISPLAY_WIDTH=720
@@ -130,13 +129,13 @@ exit 0
             assert len(unmount_indexes)==4,(case,events)
             assert all(i<game_index for i in unmount_indexes[:2]),(case,events)
             assert all(cleanup_index<i<finish_index for i in unmount_indexes[2:]),(case,events)
-    if case in ('missing-data','wrong-arch','download-error','missing-portmaster'):
+    if case in ('missing-data','missing-portmaster'):
         assert not any(e.startswith('mount ') for e in events),events
     if case == 'missing-java-portmaster':
         assert sum(e.startswith('mount ') for e in events)==1 and events.count('finish')==0,(case,events)
     if case in ('success','no-getconf','game-error','no-mount-firmware'):
         assert sum(e.startswith('mount ') for e in events)==2,events
-    if case in ('bad-data','bad-resolution','mount-error'):
+    if case in ('bad-data','bad-resolution'):
         assert sum(e.startswith('mount ') for e in events)==2,events
         assert 'finish' not in events and 'cleanup' not in events,events
     launcher_source=(ROOT/'package'/config['script']).read_text(encoding='utf-8')

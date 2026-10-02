@@ -17,18 +17,7 @@ def add(out, source, target):
     entry.compress_type = zipfile.ZIP_DEFLATED
     out.writestr(entry, source.read_bytes())
 
-def sync_package_readme():
-    source = (ROOT/'README.md').read_text(encoding='utf-8')
-    compile_section = '\n## Compile\n'
-    if compile_section not in source:
-        raise SystemExit('README.md must contain a Compile section separating source instructions from package instructions')
-    package_readme = source.split(compile_section, 1)[0].rstrip() + '\n'
-    destination = ROOT/'package/README.md'
-    if not destination.is_file() or destination.read_text(encoding='utf-8') != package_readme:
-        destination.write_text(package_readme, encoding='utf-8', newline='\n')
-
 def package():
-    sync_package_readme()
     from portmaster_package import export
     export(ROOT)
     from verify_package import verify
@@ -70,7 +59,9 @@ def main():
     parser.add_argument('--package-only', action='store_true')
     args = parser.parse_args()
     if args.package_only:
-        if not (ROOT/'package/residual/runtime/residual-host.jar').is_file():
+        package_host = ROOT/'package/residual/runtime/residual-host.jar'
+        built_host = ROOT/'build/portmaster-package/residual/runtime/residual-host.jar'
+        if not package_host.is_file() and not built_host.is_file():
             parser.error('Run a full build before --package-only')
         package()
         return
@@ -92,7 +83,7 @@ def main():
     sources = sorted((ROOT/'compile-api').rglob('*.java')) + sorted((ROOT/'src').rglob('*.java'))
     subprocess.run([str(javac), '--release', '8', '-Xlint:-options', '-encoding', 'UTF-8',
                     '-cp', cp, '-d', str(classes), *map(str, sources)], check=True)
-    runtime = ROOT/'package/residual/runtime'
+    runtime = ROOT/'build/portmaster-package/residual/runtime'
     runtime.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(runtime/'residual-host.jar', 'w') as out:
         # Only adaptation classes ship. Compile declarations and libraries never do.
